@@ -33,7 +33,16 @@ namespace CommentForm.Controllers
             {
                 return HttpNotFound();
             }
-            return View(comment);
+            //return View(comment);
+
+            var viewModel = new CommentFormViewModel
+            {
+                Comment = comment, //We don't want to pull back all the procedures, just the one with the same priority as our comment
+                Procedure = (from p in db.Procedures //from place in database
+                             where p.Priority == comment.Priority //where the priority of that variable is the same as the comment priority
+                             select p).First() //get the first priority
+            };
+            return View(viewModel);
         }
 
         // GET: Comments/Create
